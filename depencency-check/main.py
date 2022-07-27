@@ -1,7 +1,7 @@
 import os
-from utils.npm import version_comparison, cve_check
+from utils.npm import NPM
 
-DIR_PATH = "F:\\Node.JS\\weather-app"
+DIR_PATH = "."
 
 pckg_json_found = False
 pckg_lck_json_found = False
@@ -22,11 +22,12 @@ elif pckg_lck_json_found and pckg_json_found:
     print("#"*50)
     print("Performing NPM dependency version checks....")
     print("#"*50)
-    version_comparison(os.path.join(DIR_PATH, 'package.json'))
+    NPM.version_comparison(os.path.join(DIR_PATH, 'package.json'))
     print("#"*50)
     print("Performing NPM vulnerabilities check....")
     print("#"*50)
-    cve_check(DIR_PATH)
+    NPM.cve_check(DIR_PATH)
 elif req_txt_found:
     # Python checks
+
     pass
