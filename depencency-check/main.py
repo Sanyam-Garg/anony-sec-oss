@@ -1,19 +1,32 @@
 import os
-from utils.npm import version_comparison
+from utils.npm import version_comparison, cve_check
 
-DIR_PATH = "."
+DIR_PATH = "F:\\Node.JS\\weather-app"
 
-flag = False
+pckg_json_found = False
+pckg_lck_json_found = False
+req_txt_found = False
+
 for fname in os.listdir(DIR_PATH):
     if fname == 'package.json':
-        flag = True
-        print("Performing NPM dependency version checks..")
-        version_comparison(os.path.join(DIR_PATH, 'package.json'))
-        pass
+        pckg_json_found = True
+    elif fname == 'package-lock.json':
+        pckg_lck_json_found = True
     elif fname == 'requirements.txt' or fname == 'requirements-dev.txt':
-        flag = True
-        print("Performing Python dependency version checks..")
-        pass
+        req_txt_found = True
 
-if not flag:
-    print("[!] Error: Dependency file for npm or python not found")
+if not (pckg_json_found and pckg_lck_json_found) and not req_txt_found:
+    print("[!] Error: Manifest files for npm or python not found")
+elif pckg_lck_json_found and pckg_json_found:
+    # NPM Check
+    print("#"*50)
+    print("Performing NPM dependency version checks....")
+    print("#"*50)
+    version_comparison(os.path.join(DIR_PATH, 'package.json'))
+    print("#"*50)
+    print("Performing NPM vulnerabilities check....")
+    print("#"*50)
+    cve_check(DIR_PATH)
+elif req_txt_found:
+    # Python checks
+    pass
