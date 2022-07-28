@@ -26,7 +26,7 @@ class NPM:
 
             # If first result is not equal to the key, the package is deprecated
             if first_result_title != key:
-                print(f'[!] Package {key} is deprecated. Updating is highly recommended.')
+                print(f'[!] Package {key} is deprecated. Update is highly recommended.')
             else:
                 # Get latest version of the depencency
                 dep = soup.find('span', class_='_657f443d')
@@ -45,12 +45,13 @@ class NPM:
     @staticmethod
     def cve_check(dirname):
         os.chdir(dirname)
-        subprocess.run(["npm", "audit" ,">", "npm_cves.txt"], shell=True)
+        subprocess.run(["npm", "audit" ,">", "vulns.txt"], shell=True)
         
         # Read the number of vulnerabilities
         with open("npm_cves.txt", "r") as fp:
             vuln = fp.read().split('\n')[-5]
             print(vuln)
+            print(f"[+] More details are available in {os.path.join(dirname, 'vulns.txt')} file.")
             # vuln = vuln.split(' ')
             # print(f'[!] Total vulnerabilities: {vuln[0]}')
             # if len(vuln) == 8:

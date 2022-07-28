@@ -28,7 +28,7 @@ class PIP:
                     latest_version = soup.find_all('span', class_='package-snippet__version')[i].text
                     break
             if not key_found:
-                print(f'[!] Package {key} is deprecated. Update required.')
+                print(f'[!] Package {key} is deprecated. Update is highly recommended.')
             else:
                 installed_version = dependencies[key].split('^')[-1]
                 
@@ -48,3 +48,4 @@ class PIP:
         with open('vulns.json', 'r') as fp:
             parsed_data = json.load(fp)
             print(f'Total vulnerabilites found in installed packages: {parsed_data["report_meta"]["vulnerabilities_found"]}')
+            print(f"[+] More details are available in {os.path.join(dirname, 'vulns.json')} file.")
