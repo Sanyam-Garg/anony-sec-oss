@@ -39,7 +39,7 @@ class NPM:
                 # Check backwards incompatible updates
                 if int(installed_major) < int(latest_major):
                     print(f'[!] Major update available for {key}: {installed_version} to {latest_version}')
-                else:
+                elif latest_version != installed_version:
                     print(f'[-] Recommended update {key} from {installed_version} to {latest_version}')
 
     @staticmethod
