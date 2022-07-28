@@ -44,11 +44,13 @@ class NPM:
 
     @staticmethod
     def cve_check(dirname):
+        # cwd = os.getcwd()
+        # path_to_vulns = os.path.join(cwd, "vulns.txt")
         os.chdir(dirname)
         subprocess.run(["npm", "audit" ,">", "vulns.txt"], shell=True)
         
         # Read the number of vulnerabilities
-        with open("npm_cves.txt", "r") as fp:
+        with open("vulns.txt", "r") as fp:
             vuln = fp.read().split('\n')[-5]
             print(vuln)
             print(f"[+] More details are available in {os.path.join(dirname, 'vulns.txt')} file.")
