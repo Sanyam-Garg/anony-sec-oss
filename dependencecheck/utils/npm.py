@@ -48,7 +48,10 @@ class NPM:
         # path_to_vulns = os.path.join(cwd, "vulns.txt")
         os.chdir(dirname)
         with open("vulns.txt", "w") as fp:
-            subprocess.run(["npm", "audit"], stdout=fp)
+            if os.name == 'nt':
+                subprocess.run(["npm", "audit"], stdout=fp, shell=True)
+            elif os.name == 'posix':
+                subprocess.run(["npm", "audit"], stdout=fp)
         
         # Read the number of vulnerabilities
         with open(os.path.join(dirname, 'vulns.txt'), "r") as fp:
