@@ -1,4 +1,0 @@
-- [] Dependency version checks
-- [] Graudit integration
-- [] Synk CLI integration
-- [] GitHub repo activity, documentation check

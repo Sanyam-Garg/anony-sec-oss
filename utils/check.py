@@ -1,6 +1,6 @@
 import os
-from .utils.npm import NPM
-from .utils.pip import PIP
+from pm.npm import NPM
+from pm.pip import PIP
 
 # dir = "."
 
@@ -32,10 +32,21 @@ def check_dir(dir):
     elif req_txt_found:
         # Python checks
         print("="*50)
-        print("Performing PIP dependency version checks....")
+        print("Performing PIP dependency version checks.")
         print("="*50)
-        PIP.version_comparison(os.path.join(dir, 'requirements.txt'))
+        version_score = PIP.version_comparison(os.path.join(dir, 'requirements.txt'))
         print("="*50)
-        print("Performing PIP vulnerabilities check....")
+        print("Performing PIP vulnerabilities check.")
         print("="*50)
-        PIP.cve_check(dir, os.path.join(dir, 'requirements.txt'))
+        package_cve_score = PIP.cve_check(dir, os.path.join(dir, 'requirements.txt'))
+        print("="*50)
+        print("Performing static code analysis")
+        print("="*50)
+        sast_score = PIP.examine_code(dir)
+        score = (version_score + package_cve_score + sast_score) / 3
+        print("="*50)
+        print(f'Repository dependency version rating: {version_score}/10')
+        print(f'Repository dependency vulnerability rating: {package_cve_score}/10')
+        print(f'Repository static code analysis rating: {sast_score}/10')
+        print(f'Repository security rating: {score}/10')
+        print("="*50)

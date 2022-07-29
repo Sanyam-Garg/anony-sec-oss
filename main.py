@@ -1,12 +1,12 @@
 import typer, subprocess, os, stat
-from dependencecheck.main import check_dir
+from utils.check import check_dir
 
 app = typer.Typer()
 
 def rmtree(top):
     for root, dirs, files in os.walk(top, topdown=False):
         for name in files:
-            if name == 'vulns.txt' or name == 'vulns.json':
+            if name == 'vulns.txt' or name == 'vulns.json' or name == 'code_analysis.txt':
                 pass
             else:
                 filename = os.path.join(root, name)
