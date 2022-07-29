@@ -6,8 +6,11 @@ class PIP:
     def load_dependencies(manifest_file):
         dependencies = {}
         with open(manifest_file, 'r', encoding='utf-8') as fp:
-            for req in requirements.parse(fp):
-                dependencies[req.name] = req.specs[-1][-1]
+            try:
+                for req in requirements.parse(fp):
+                    dependencies[req.name] = req.specs[-1][-1]
+            except:
+                raise Exception("[!] Error parsing requirements.txt file: Format not compatible.")
         return dependencies
             
 
@@ -23,7 +26,7 @@ class PIP:
             temp = soup.find_all('span', class_='package-snippet__name')
             key_found = False
             for i in range(0, 3):
-                if temp[i].text == key:
+                if temp[i].text.lower() == key.lower():
                     key_found = True
                     latest_version = soup.find_all('span', class_='package-snippet__version')[i].text
                     break
