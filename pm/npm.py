@@ -12,7 +12,9 @@ class NPM:
 
     @classmethod
     def version_comparison(self, manifest_file):
+        score = 10.0
         dependencies = self.load_dependencies(manifest_file)
+        cnt = len(dependencies)
         for key in dependencies:
             # print(key, dependencies[key])
             url = 'https://www.npmjs.com/search?q='+key
@@ -27,6 +29,7 @@ class NPM:
             # If first result is not equal to the key, the package is deprecated
             if first_result_title != key:
                 print(f'[!] Package {key} is deprecated. Update is highly recommended.')
+                score -= (1/cnt) * score
             else:
                 # Get latest version of the depencency
                 dep = soup.find('span', class_='_657f443d')
@@ -39,13 +42,16 @@ class NPM:
                 # Check backwards incompatible updates
                 if int(installed_major) < int(latest_major):
                     print(f'[!] Major update available for {key}: {installed_version} to {latest_version}')
+                    score -= (0.7/cnt) * score
                 elif latest_version != installed_version:
                     print(f'[-] Recommended update {key} from {installed_version} to {latest_version}')
-
+                    score -= (0.4/cnt) * score
+        return score
     @staticmethod
     def cve_check(dirname):
         # cwd = os.getcwd()
         # path_to_vulns = os.path.join(cwd, "vulns.txt")
+        score = 10.0
         os.chdir(dirname)
         with open("vulns.txt", "w") as fp:
             if os.name == 'nt':
@@ -58,9 +64,18 @@ class NPM:
             vuln = fp.read().split('\n')[-5]
             print(vuln)
             print(f"[+] More details are available in {os.path.join(dirname, 'vulns.txt')} file.")
-            # vuln = vuln.split(' ')
+            vuln = vuln.split(' ')
             # print(f'[!] Total vulnerabilities: {vuln[0]}')
-            # if len(vuln) == 8:
-            #     print(f"[!] Moderate vulnerabilities: {vuln[2].split('(')[-1]}")
-            #     print(f'[!] High vulnerabilities: {vuln[4]}')
-            #     print(f'[!] Critical vulnerabilities: {vuln[6]}')
+            if vuln[0] == 'no':
+                return score
+            if len(vuln) == 8:
+                # print(f"[!] Moderate vulnerabilities: {vuln[2].split('(')[-1]}")
+                score -= (int(vuln[4]) * 0.5) / 10
+                # print(f'[!] High vulnerabilities: {vuln[4]}')
+                score -= (int(vuln[4])) * 0.7 / 10
+                # print(f'[!] Critical vulnerabilities: {vuln[6]}')
+                score -= (int(vuln[4]) * 1) / 10
+            else:
+                score -= (int(vuln[0]) * 0.6) / 10
+            
+        return score

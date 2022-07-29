@@ -24,11 +24,17 @@ def check_dir(dir):
         print("="*50)
         print("Performing NPM dependency version checks....")
         print("="*50)
-        NPM.version_comparison(os.path.join(dir, 'package.json'))
+        version_score = NPM.version_comparison(os.path.join(dir, 'package.json'))
         print("="*50)
         print("Performing NPM vulnerabilities check....")
         print("="*50)
-        NPM.cve_check(dir)
+        package_cve_score = NPM.cve_check(dir)
+        score = (version_score + package_cve_score) / 2
+        print("="*50)
+        print(f'Repository dependency version rating: {version_score:.2f}/10')
+        print(f'Repository dependency vulnerability rating: {package_cve_score:.2f}/10')
+        print(f'Repository security rating: {score}/10')
+        print("="*50)
     elif req_txt_found:
         # Python checks
         print("="*50)
@@ -45,8 +51,8 @@ def check_dir(dir):
         sast_score = PIP.examine_code(dir)
         score = (version_score + package_cve_score + sast_score) / 3
         print("="*50)
-        print(f'Repository dependency version rating: {version_score}/10')
-        print(f'Repository dependency vulnerability rating: {package_cve_score}/10')
-        print(f'Repository static code analysis rating: {sast_score}/10')
-        print(f'Repository security rating: {score}/10')
+        print(f'Repository dependency version rating: {version_score:.2f}/10')
+        print(f'Repository dependency vulnerability rating: {package_cve_score:.2f}/10')
+        print(f'Repository static code analysis rating: {sast_score:.2f}/10')
+        print(f'Repository security rating: {score:.2f}/10')
         print("="*50)
