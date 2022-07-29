@@ -1,4 +1,5 @@
 import requests, requirements, subprocess, os, json
+from colorama import Fore, Style, Back
 from bs4 import BeautifulSoup
 
 class PIP:
@@ -33,7 +34,8 @@ class PIP:
                     latest_version = soup.find_all('span', class_='package-snippet__version')[i].text
                     break
             if not key_found:
-                print(f'[!] Package {key} is deprecated. Update is highly recommended.')
+                print(Fore.RED + f'[!] Package {key} is deprecated. Update is highly recommended.')
+                print(Style.RESET_ALL)
                 score -= (1/cnt) * score
             else:
                 installed_version = dependencies[key].split('^')[-1]
@@ -42,10 +44,12 @@ class PIP:
                 installed_major = installed_version.split('.')[0]
 
                 if latest_major > installed_major:
-                    print(f'[!] Major update available for {key}: {installed_version} to {latest_version}')
+                    print(Fore.YELLOW + f'[!] Major update available for {key}: {installed_version} to {latest_version}')
+                    print(Style.RESET_ALL)
                     score -= (0.7/cnt) * score
                 elif latest_version != installed_version:
-                    print(f'[-] Recommended update {key} from {installed_version} to {latest_version}')
+                    print(Fore.CYAN + f'[-] Recommended update {key} from {installed_version} to {latest_version}')
+                    print(Style.RESET_ALL)
                     score -= (0.4/cnt) * score
         return score
     
@@ -59,8 +63,9 @@ class PIP:
         subprocess.run(["safety", "check", "-r", requirements_file, "--save-json", "vulns.json"], stdout=subprocess.DEVNULL)
         with open('vulns.json', 'r') as fp:
             parsed_data = json.load(fp)
-            print(f'Total vulnerabilites found in installed packages: {parsed_data["report_meta"]["vulnerabilities_found"]}')
+            print(Fore.RED + f'Total vulnerabilites found in installed packages: {parsed_data["report_meta"]["vulnerabilities_found"]}')
             score -= (int(parsed_data["report_meta"]["vulnerabilities_found"])/cnt) * score
+            print(Style.RESET_ALL)
             print(f"[+] More details are available in {os.path.join(dirname, 'vulns.json')} file.")
         return score
     
@@ -72,7 +77,8 @@ class PIP:
             subprocess.run(["bandit", "-r", path], stdout=fp)
         with open("code_analysis.txt", "r") as fp:
             analysis = fp.readlines()
-            print("Vulnerabilities on the basis of severity:")
+            print(Fore.RED + "Vulnerabilities on the basis of severity:")
+            print(Style.RESET_ALL)
             for i in [-10, -9, -8, -7]:
                 spec = analysis[i].strip().split(':')
                 num = spec[1].split(' ')[-1]
@@ -84,9 +90,10 @@ class PIP:
                 elif i == -8:
                     score -= (int(num) * 3) / 10
 
-            print("Vulnerabilities on the basis of confidence:")
+            print(Fore.YELLOW + "Vulnerabilities on the basis of confidence:")
             for i in [-5, -4, -3, -2]:
                 spec = analysis[i].strip().split(':')
                 print(f"{spec[0]}: {spec[1].split(' ')[-1]}")
         print(f"[+] More details are available in {os.path.join(path, 'code_analysis.txt')} file.")
+        print(Style.RESET_ALL)
         return score

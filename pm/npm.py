@@ -1,4 +1,5 @@
 import json, requests, os, subprocess
+from colorama import Fore, Style, Back
 from bs4 import BeautifulSoup
 
 class NPM:
@@ -28,7 +29,8 @@ class NPM:
 
             # If first result is not equal to the key, the package is deprecated
             if first_result_title != key:
-                print(f'[!] Package {key} is deprecated. Update is highly recommended.')
+                print(Fore.RED + f'[!] Package {key} is deprecated. Update is highly recommended.')
+                print(Style.RESET_ALL)
                 score -= (1/cnt) * score
             else:
                 # Get latest version of the depencency
@@ -41,10 +43,12 @@ class NPM:
 
                 # Check backwards incompatible updates
                 if int(installed_major) < int(latest_major):
-                    print(f'[!] Major update available for {key}: {installed_version} to {latest_version}')
+                    print(Fore.YELLOW + f'[!] Major update available for {key}: {installed_version} to {latest_version}')
+                    print(Style.RESET_ALL)
                     score -= (0.7/cnt) * score
                 elif latest_version != installed_version:
-                    print(f'[-] Recommended update {key} from {installed_version} to {latest_version}')
+                    print(Fore.CYAN + f'[-] Recommended update {key} from {installed_version} to {latest_version}')
+                    print(Style.RESET_ALL)
                     score -= (0.4/cnt) * score
         return score
     @staticmethod
@@ -62,7 +66,8 @@ class NPM:
         # Read the number of vulnerabilities
         with open(os.path.join(dirname, 'vulns.txt'), "r") as fp:
             vuln = fp.read().split('\n')[-5]
-            print(vuln)
+            print(Fore.RED + vuln)
+            print(Style.RESET_ALL)
             print(f"[+] More details are available in {os.path.join(dirname, 'vulns.txt')} file.")
             vuln = vuln.split(' ')
             # print(f'[!] Total vulnerabilities: {vuln[0]}')
