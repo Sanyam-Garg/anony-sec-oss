@@ -23,7 +23,7 @@ def check_dir(dir):
         print(Style.RESET_ALL)
     elif pckg_lck_json_found and pckg_json_found:
         # NPM Check
-        print(Fore.LIGHTYELLO_EX + "="*50)
+        print(Fore.LIGHTYELLOW_EX + "="*50)
         print("Performing NPM dependency version checks....")
         print("="*50)
         print(Style.RESET_ALL)
