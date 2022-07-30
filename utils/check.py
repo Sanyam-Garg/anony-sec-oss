@@ -63,4 +63,5 @@ def check_dir(dir):
         print(f'Repository dependency vulnerability rating: {package_cve_score:.2f}/10')
         print(f'Repository static code analysis rating: {sast_score:.2f}/10')
         print(f'Repository overall security rating: {score:.2f}/10')
+        print(Style.RESET_ALL)
         print("="*50)
