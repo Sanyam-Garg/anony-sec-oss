@@ -75,12 +75,12 @@ class NPM:
                 return score
             if len(vuln) == 8:
                 # print(f"[!] Moderate vulnerabilities: {vuln[2].split('(')[-1]}")
-                score -= (int(vuln[4]) * 0.5) / 10
+                score -= (int(vuln[4]) * 0.5)
                 # print(f'[!] High vulnerabilities: {vuln[4]}')
-                score -= (int(vuln[2])) * 0.7 / 10
+                score -= (int(vuln[2].split('(')[-1]) * 0.7)
                 # print(f'[!] Critical vulnerabilities: {vuln[6]}')
-                score -= (int(vuln[6]) * 1) / 10
+                score -= (int(vuln[6]) * 1)
             else:
-                score -= (int(vuln[0]) * 0.6) / 10
+                score -= (int(vuln[0]) * 0.6)
             
         return score
