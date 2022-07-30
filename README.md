@@ -33,3 +33,6 @@ This is a command line tool that can function with a repository link, or if the 
 2. **Using path to downloaded repository**
 From the project folder, run the following command : `python main.py analyse <path-to-downloaded-repo> --with-dir`
 >The tool then prints out the security information of the repository onto the terminal and stores some additional files in the cloned repositories folder.
+* Example <br>
+     ![1](https://drive.google.com/file/d/1N4oYMCrYE3Gqkd2M5nQt5as9r64-0o2R/view?usp=sharing) <br>
+     ![2](https://drive.google.com/file/d/1EeAE1nZbD7TD8BEfdffC9As0YCVpoK3_/view?usp=sharing)
